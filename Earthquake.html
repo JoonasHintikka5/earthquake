@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html>
+<head>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+<script>
+$(document).ready(function(){
+	var parser = new DOMParser();
+	
+	$.get("https://earthquake.usgs.gov/earthquakes/feed/v1.0/summary/2.5_day.atom", function(data, status){
+		console.log("Data: " + data + "\nStatus: " + status);
+		var perkele = new XMLSerializer().serializeToString(data.documentElement);
+		console.log("PERKELE: " + perkele);
+		var xmlDoc = parser.parseFromString(perkele,"text/xml");
+		
+		var vidura = "";
+		var i = 1;
+		while (xmlDoc.getElementsByTagName("title")[i] !== undefined) {
+			console.log("title " + xmlDoc.getElementsByTagName("title")[i].childNodes[0].nodeValue);
+			console.log("updated " + xmlDoc.getElementsByTagName("updated")[i].childNodes[0].nodeValue);
+			vidura = vidura + xmlDoc.getElementsByTagName("updated")[i].childNodes[0].nodeValue + " ";
+			vidura = vidura + xmlDoc.getElementsByTagName("title")[i].childNodes[0].nodeValue + "<br />";
+			i++;
+		}
+		document.getElementById("title").innerHTML = vidura;
+
+	});
+});
+</script>
+</head>
+<body>
+	<p id="title"></p>
+</body>
+</html>
